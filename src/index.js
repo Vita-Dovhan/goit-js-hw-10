@@ -11,13 +11,11 @@ const countryInfo = document.querySelector('.country-info');
 
 input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
-
-
 function onInput(e) {
   const name = e.target.value.trim();
   if (!name) {
-    countryList.insertAdjacentHTML("beforeend", '');
-    countryInfo.insertAdjacentHTML("beforeend", '');
+    countryList.innerHTML = '';
+    countryInfo.innerHTML = '';
     return;
   }
   fetchCountries(name)
@@ -27,9 +25,9 @@ function onInput(e) {
 
 function searchCountry(response) {
   if (response.length > 10) {
-    countryList.insertAdjacentHTML("beforeend", '');
+    countryList.innerHTML = '';
     Notify.info('Too many matches found. Please enter a more specific name.');
-  } else if (response.length >= 2 && response.length < 10) {
+  } else if (response.length >= 2) {
     const markup = response
       .map(({ flags, name }) => {
         return `
@@ -37,15 +35,15 @@ function searchCountry(response) {
   ${name.official}</h2>`;
       })
       .join('');
-    countryInfo.insertAdjacentHTML("beforeend", '');
-    countryList.insertAdjacentHTML("beforeend", markup);
+    countryInfo.innerHTML = '';
+    countryList.innerHTML = markup;
   } else {
     const markup = response
       .map(({ flags, name, population, capital, languages }) => {
         return `
   <h2>
   <img src=${flags.svg} width="60" height="40" alt=flag_of_country >
-  ${name.official}</h1>
+  ${name.official}</h2>
   <ul class='list'>
   <li>Capital: ${capital}</li>
   <li>Population: ${population}</li>
@@ -53,13 +51,13 @@ function searchCountry(response) {
   ></ul>`;
       })
       .join('');
-    countryInfo.insertAdjacentHTML("beforeend", markup);
-    countryList.insertAdjacentHTML("beforeend", '');
+    countryList.innerHTML = '';
+    countryInfo.innerHTML = markup;
   }
 }
 function error() {
-  countryInfo.insertAdjacentHTML("beforeend", '');
-  countryList.insertAdjacentHTML("beforeend", '');
   Notify.failure('Oops, there is no country with that name');
+  countryList.innerHTML = '';
+  countryInfo.innerHTML = '';
 }
 
